@@ -1,0 +1,29 @@
+service: mememaker
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+package:
+  individually: true
+  excludeDevDependencies: true
+  patterns:
+    - "!./dependencies**"
+    - "!./mocks"
+
+functions:
+  mememaker:
+      handler: app/functions/mememaker/handler.mememaker
+      events:
+        - http:
+            path: mememaker
+            method: get
+            cors: true
+      layers:
+        - { Ref: GmLibraryLambdaLayer }
+layers:
+  GmLibrary:
+    package:
+      artifact: dependencies.zip
